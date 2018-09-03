@@ -1,0 +1,3 @@
+---
+puppet-jenkins_ci_setup::profiles::lighttpd::installed: true
+puppet-jenkins_ci_setup::profiles::lighttpd::message: "Welcome at the demo installation"
