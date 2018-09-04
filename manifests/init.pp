@@ -1,12 +1,10 @@
-# == Class: puppet-jenkins_ci_setup::init
+# == Class: jenkins_ci_setup
 #
-class puppet-jenkins_ci_setup{
+class jenkins_ci_setup {
 
-  ## ressource ordering
-  class { '::puppet-jenkins_ci_setup2':} ->
-  class { '::puppet-jenkins_ci_setup::profiles::lighttpd':}
 
-  ## needed ressources
-  include ::puppet-jenkins_ci_setup2
-  include ::puppet-jenkins_ci_setup::profiles::lighttpd
+  include ::jenkins_ci_setup::profiles::jenkins
+  include ::jenkins_ci_setup::profiles::docker
+  include ::jenkins_ci_setup::profiles::haproxy
+
 }

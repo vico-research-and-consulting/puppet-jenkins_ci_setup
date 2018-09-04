@@ -1,32 +1,7 @@
 Overview
 --------
 
-This template utilizes [Test Kitchen](http://kitchen.ci/) to test puppetcode.
-You can use this template to write new puppet modules or to enhance existing modules.
-
-It provides the following aspects:
-
-  * puppet template with demo code which installs a lighthttpd
-  * convenient development environment 
-    * download and create a ubuntu and debian image in a virtualbox environment
-    * download and create a ubuntu docker image 
-    * basic installation of puppet 4/5 client
-    * automatic installation of puppet modules specified in the "Puppetfile" using librarian
-  * check the setup using serverspec tests executed in the environment
-
-Why do i need that?
-
-  * provide convenient test setups for system development
-  * reduce the need to develop on production or shared testsystems<BR>
-    (sometimes you still need this, i.e. if you need special hardware to test your implementation)
-  * test multiple variants of a setup on different operating systems<BR>
-    (Ubuntu 14.04, 16.04, OpenSuse, ...)
-  * prevent time consuming and git history polluting edit locally, commit/push, puppet execution roundtrips
-  * automatically install needed puppet modules
-  * easily test defined combinations of modules/roles
-  * integrate automated tests to your ci-pipeline (i.e. jenkins)
-  * reduce resource overhead by simply throwing away outdated setups
-  * Execute tests remotely end very time efficient on AWS/EC2, Openstack, Vagrant, ...
+This module installs a almost ready to use jenkins setup for corporated needs.
 
 Resources
 ---------
@@ -49,6 +24,43 @@ Resources
   * https://apache.googlesource.com/infrastructure-puppet-kitchen/
  * Librarian: http://librarian-puppet.com/
 
+How to use it
+------------------------------------
+
+  * Assign the role/the module "jenkins_ci_setup" to the node 
+  * Register a dns entry for this setup, i.e. jenkins.mycompany.com
+  * Run puppet on the target system and wait for completion
+  * Gather start password for the "admin" user.
+    ```
+    $ grep -A 2 "Please use the following password to proceed to installation:" /var/log/jenkins/jenkins.log 
+    Please use the following password to proceed to installation:
+
+    c2241482815255368i9992aaaffaaffa
+    ```
+  * Invoke jenkins web ui: https://<dns-name>/
+  * Change password of "admin" user
+  * Get the public key of automatically generated ssh keypair
+    ```
+    cat /var/lib/jenkins/.ssh/id_rsa.pub
+    ```
+  * Add the ssh public key to all target systems (jenkins slaves, remote execution servers - ideally using puppet)
+    ```
+    ssh <hostname>
+    useradd -m jenkins -G docker -s /bin/bash
+    mkdir ~jenkins/.ssh
+    echo "ssh-rsa ..." >> ~jenkins/.ssh/authorized_keys
+    chown -R jenkins:jenkins ~jenkins/.ssh/
+    chmod 700 ~jenkins/.ssh/
+    chmod 600 ~jenkins/.ssh/authorized_keys
+    ```
+  * Approve the ssh keypair of the target system
+    ```
+    ssh <jenkins-server>
+    su - jenkins
+    ssh <hostname>
+    ```
+  * Credentials anlegen: Zugangsdaten => ... SSH Key anlegen
+
 How to start:
 ------------------------------------
 
@@ -61,18 +73,6 @@ How to start:
      wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
      sudo dpkg -i vagrant_*_x86_64.deb
      ```
-  * Install docker
-   * see: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-docker-ce
-   * Download and installation (using "zesty" releas on "artful" because docker ubuntu repos not seem to be complete now)
-     ```
-     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-	   sudo add-apt-repository \
-		   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-		   zesty \
-		   stable"
-     apt-get install docker-ce
-     ```
-  * Add yourself to the docker and vbox group and relogin to your desktop session
   * Clone the repo
     ```
     git clone https://github.com/scoopex/puppet-puppet-jenkins_ci_setup.git
@@ -186,54 +186,6 @@ Develop and test puppet code
    kitchen destroy <instance>
    ```
 
-
-Use it in your own project
-------------------------------------
-
- * Find a new name (name should not contain dashes)
-   ```
-   PROJECT_NAME="puppet-<name>"
-   ```
- * Fork in on github, name it puppet-<projectname> or clone directory
-   ```
-   git clone https://github.com/scoopex/puppet-puppet-jenkins_ci_setup $PROJECT_NAME
-   cd $PROJECT_NAME
-   rm -rf .git
-   ```
- * Replace all occurrences of the template name
-   ```
-   grep -n -r "puppet-jenkins_ci_setup" .|cut -d ':' -f1|sort -u|while read A; do sed -i "~s,puppet-jenkins_ci_setup,${PROJECT_NAME},g" $A; done
-   git init
-   git add -A .
-   ```
- * Execute the steps in section "Develop and test puppet code"
- * Create a git project in your git server
- * Commit && Push
-   ```
-   git commit -m "Initial checkin" -a
-   git remote add origin <repo url>
-   git push -u origin --all
-   git push -u origin --tags
-   ```
-
-Merge changes of the template to your project
----------------------------------------------
-
- * Using GIT
-   ```
-   git remote add upstream https://github.com/scoopex/puppet-puppet-jenkins_ci_setup.git
-   git fetch upstream
-   git checkout master
-   git merge upstream/master
-   ```
- * Manual (time consuming way) way
-   ```
-   cd /tmp
-   git clone https://github.com/scoopex/puppet-puppet-jenkins_ci_setup.git
-   cd /your-project
-   diff -r --brief -x .librarian -x .git -x Gemfile.lock -x .kitchen -x .tmp /tmp/puppet-puppet-jenkins_ci_setup
-   vim -d /tmp/puppet-puppet-jenkins_ci_setup/<file> <file>
-   ```
 
 Contribution
 ------------

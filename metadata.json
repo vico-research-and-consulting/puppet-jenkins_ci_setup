@@ -2,12 +2,12 @@
   "name": "puppet-jenkins_ci_setup",
   "version": "0.1.0",
   "author": "Marc Schoechlin",
-  "summary": "A template for testing puppet code in kitchen",
+  "summary": "Install a corporate jenkins setup",
   "license": "BSD 2-Clause License",
-  "source": "https://github.com/scoopex/puppet-puppet-jenkins_ci_setup",
-  "project_page": null,
+  "source": "git@github.com:scoopex/puppet-jenkins_ci_setup.git",
+  "project_page": "https://github.com/scoopex/puppet-jenkins_ci_setup",
   "dependencies": [
-     { "name":"puppetlabs/stdlib" }
+
   ],
-  "issues_url": "https://github.com/scoopex/puppet-puppet-jenkins_ci_setup/issues"
+  "issues_url": null
 }
