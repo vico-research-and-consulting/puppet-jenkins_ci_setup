@@ -24,6 +24,18 @@ Resources
   * https://apache.googlesource.com/infrastructure-puppet-kitchen/
  * Librarian: http://librarian-puppet.com/
 
+TODO
+----
+
+ * Improve documentation
+   * Configsync
+ * Secure HAPROXY
+   ```
+   ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+   ssl-default-bind-options no-sslv3
+   ```
+
+
 How to use it
 ------------------------------------
 
