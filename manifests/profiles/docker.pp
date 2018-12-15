@@ -3,44 +3,32 @@ class jenkins_ci_setup::profiles::docker (
 ) {
 
   class { 'docker':
-    #tcp_bind => $listen_ip,
-    # log_driver => 'gelf'
-    log_driver => 'journald',
-    dns => [ "8.8.8.8", "9.9.9.9" ],
-    socket_group => 'adm'
+    #log_opt =>  [ 'syslog-address=unixgram:///run/systemd/journal/syslog', 'syslog-facility=daemon' ],
+    #log_driver => 'syslog',
+    log_driver    => 'journald',
+    dns           => [ "8.8.8.8", "9.9.9.9" ],
+    docker_users  => [ 'jenkins', ],
+    require       => Class['jenkins'],
+    socket_group  => 'adm',
+    manage_kernel => false,
   }
-
-#
-#   #file { '/usr/local/sbin/docker-gc':
-#   #   ensure         => present,
-#   #   owner          => 'root',
-#   #   group          => 'root',
-#   #   mode           => '0755',
-#   #   backup         => false,
-#   #   source         => 'https://raw.githubusercontent.com/spotify/docker-gc/master/docker-gc',
-#   #   checksum       => 'md5',
-#   #   checksum_value => '416b7040ae62860e2c4685e4fc50e1fa',
-#   #}
-#
-#   exec { 'download-/usr/local/sbin/docker-gc':
-#     command =>
-#       "/usr/bin/wget -q https://raw.githubusercontent.com/spotify/docker-gc/master/docker-gc -O /usr/local/sbin/docker-gc"
-#     ,
-#     creates => "/usr/local/sbin/docker-gc",
-#   } ->
-#   file { '/usr/local/sbin/docker-gc':
-#     mode => '0755',
-#   }
-#
-#   file { '/etc/sudoers.d/docker-gc':
-#     ensure  => present,
-#     owner   => 'root',
-#     group   => 'root',
-#     mode    => '0644',
-#     content => "
-# $user ALL = NOPASSWD:/usr/local/sbin/docker-gc
-#       "
-#   }
-
+  # docker-gc fetched from: https://github.com/spotify/docker-gc/docker-gc
+  # https://raw.githubusercontent.com/spotify/docker-gc/master/docker-gc
+  file { '/usr/local/sbin/docker-gc':
+    ensure => file,
+    owner  => "root",
+    group  => "root",
+    mode   => "0755",
+    source => 'puppet:///modules/vicodocker/docker-gc',
+  }
+  file { '/etc/cron.d/docker-gc':
+    ensure  => file,
+    owner   => "root",
+    group   => "root",
+    mode    => "0644",
+    content => "
+0 */8 * * * root /usr/local/sbin/docker-gc 2>&1 |logger -t docker-gc
+      "
+  }
 }
 

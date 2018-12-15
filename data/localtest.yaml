@@ -1,5 +1,5 @@
 ---
-jenkins_ci_setup::profiles::haproxy::pem_certificate: "/etc/foo-ssl/star_foobar_net/star_foobar_net.pem"
+jenkins_ci_setup::profiles::haproxy::pem_certificate: "/etc/ssl/localtest.crt"
 
 #jenkins_ci_setup:profiles::jenkins::user_hash:
 #  admin:

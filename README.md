@@ -55,23 +55,34 @@ How to use it
     ```
     cat /var/lib/jenkins/.ssh/id_rsa.pub
     ```
-  * Add the ssh public key to all target systems (jenkins slaves, remote execution servers - ideally using puppet)
-    ```
-    ssh <hostname>
-    useradd -m jenkins -G docker -s /bin/bash
-    mkdir ~jenkins/.ssh
-    echo "ssh-rsa ..." >> ~jenkins/.ssh/authorized_keys
-    chown -R jenkins:jenkins ~jenkins/.ssh/
-    chmod 700 ~jenkins/.ssh/
-    chmod 600 ~jenkins/.ssh/authorized_keys
-    ```
-  * Approve the ssh keypair of the target system
-    ```
-    ssh <jenkins-server>
-    su - jenkins
-    ssh <hostname>
-    ```
-  * Credentials anlegen: Zugangsdaten => ... SSH Key anlegen
+  * Active config backup
+    * Create a jenkins-config repo at gitlab
+    * add public key to the repo as deployment key with write permissions</br>
+      (Settings -> Repository -> Deployment Keys -> Add key and hook "Write access allowed"
+    * Approve SSH Key
+      ```
+      cd /tmp
+      git clone <repourl>
+      ```
+  * TODO: Active Directory Config
+  * Manage access to alle systems 
+    * Add the ssh public key to all target systems (jenkins slaves, remote execution servers - ideally using puppet)
+      ```
+      ssh <hostname>
+      useradd -m jenkins -G docker -s /bin/bash
+      mkdir ~jenkins/.ssh
+      echo "ssh-rsa ..." >> ~jenkins/.ssh/authorized_keys
+      chown -R jenkins:jenkins ~jenkins/.ssh/
+      chmod 700 ~jenkins/.ssh/
+      chmod 600 ~jenkins/.ssh/authorized_keys
+      ```
+    * Approve the ssh keypair of the target system
+      ```
+      ssh <jenkins-server>
+      su - jenkins
+      ssh <hostname>
+      ```
+   
 
 How to start:
 ------------------------------------
