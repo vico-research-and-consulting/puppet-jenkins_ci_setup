@@ -85,10 +85,8 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'durable-task': }
     jenkins::plugin { 'email-ext': }
     jenkins::plugin { 'external-monitor-job': }
-    jenkins::plugin { 'gradle': }
     jenkins::plugin { 'ace-editor': }
     jenkins::plugin { 'jquery-detached': }
-    jenkins::plugin { 'junit': }
     jenkins::plugin { 'git': }
     jenkins::plugin { 'ldap': }
     jenkins::plugin { 'mailer': }
@@ -106,7 +104,6 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'workflow-basic-steps': }
     jenkins::plugin { 'pipeline-utility-steps': }
     jenkins::plugin { 'workflow-support': }
-    jenkins::plugin { 'saml': }
     jenkins::plugin { 'scm-api': }
     jenkins::plugin { 'script-security': }
     jenkins::plugin { 'ssh-credentials': }
@@ -117,11 +114,6 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'icon-shim': }
     jenkins::plugin { 'subversion': }
     jenkins::plugin { 'scm-sync-configuration': }
-    jenkins::plugin { 'maven-plugin': }
-    jenkins::plugin { 'm2release': }
-    jenkins::plugin { 'javadoc': }
-    jenkins::plugin { 'pipeline-maven': }
-    jenkins::plugin { 'maven-repo-cleaner': }
 
     file { "${jenkins_user_home}/.ssh":
       ensure  => directory,
