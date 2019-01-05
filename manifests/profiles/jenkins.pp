@@ -64,6 +64,7 @@ class jenkins_ci_setup::profiles::jenkins (
       notify  => Service['jenkins'],
     }
 
+    jenkins::plugin { 'ansicolor': }
     jenkins::plugin { 'workflow-job': }
     jenkins::plugin { 'pipeline-multibranch-defaults': }
     jenkins::plugin { 'workflow-multibranch': }
@@ -116,6 +117,11 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'icon-shim': }
     jenkins::plugin { 'subversion': }
     jenkins::plugin { 'scm-sync-configuration': }
+    jenkins::plugin { 'maven-plugin': }
+    jenkins::plugin { 'm2release': }
+    jenkins::plugin { 'javadoc': }
+    jenkins::plugin { 'pipeline-maven': }
+    jenkins::plugin { 'maven-repo-cleaner': }
 
     file { "${jenkins_user_home}/.ssh":
       ensure  => directory,

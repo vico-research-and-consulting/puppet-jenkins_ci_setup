@@ -64,7 +64,8 @@ How to use it
       cd /tmp
       git clone <repourl>
       ```
-  * TODO: Active Directory Config
+  * Active Directory Config
+    * 
   * Manage access to alle systems 
     * Add the ssh public key to all target systems (jenkins slaves, remote execution servers - ideally using puppet)
       ```
