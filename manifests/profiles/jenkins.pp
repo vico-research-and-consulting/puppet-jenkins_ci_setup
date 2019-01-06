@@ -49,11 +49,18 @@ class jenkins_ci_setup::profiles::jenkins (
     }
 
     # The jenkins module utilizes file_line, JAVA_ARGS is prefixed by "export" to prevent duplicate matches
-    file_line { "Jenkins disable UPD Ports ${name} 5353 and 33848":
+    file_line { "Jenkins disable UPD Ports ${name} 5353 and 33848, set memory":
       path    => '/etc/default/jenkins',
-      line    => "export JAVA_ARGS=\"\$JAVA_ARGS -Dhudson.udp=-1 -Dhudson.DNSMultiCast.disabled=true -Xmx${
-        memory_in_megabytes}m\"",
+      line    => "export JAVA_ARGS=\"\$JAVA_ARGS -Dhudson.udp=-1 -Dhudson.DNSMultiCast.disabled=true -Xmx${memory_in_megabytes}m\"",
       match   => 'hudson.DNSMultiCast.disabled',
+      require => Package['jenkins'],
+      notify  => Service['jenkins'],
+    }
+
+    file_line { "Set CSP header":
+      path    => '/etc/default/jenkins',
+      line    => 'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP="default-src \'self\'; style-src \'self\' \'unsafe-inline\'"',
+      match   => 'hudson.model.DirectoryBrowserSupport.CSP',
       require => Package['jenkins'],
       notify  => Service['jenkins'],
     }
@@ -112,8 +119,9 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'timestamper': }
     jenkins::plugin { 'token-macro': }
     jenkins::plugin { 'icon-shim': }
-    jenkins::plugin { 'subversion': }
     jenkins::plugin { 'scm-sync-configuration': }
+    jenkins::plugin { 'htmlpublisher': }
+    jenkins::plugin { 'rocketchatnotifier': }
 
     file { "${jenkins_user_home}/.ssh":
       ensure  => directory,
