@@ -4,7 +4,7 @@
 forge "https://forgeapi.puppetlabs.com"
 
 mod 'jenkinsci-jenkins',
-    :git => 'https://github.com/jenkinsci/puppet-jenkins.git',
+    :git => 'https://github.com/voxpupuli/puppet-jenkins.git',
     :ref => 'v1.7.0'
 
 mod 'puppetlabs-docker', '1.0.4'
