@@ -115,7 +115,6 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'script-security': }
     jenkins::plugin { 'ssh-credentials': }
     jenkins::plugin { 'ssh-slaves': }
-    jenkins::plugin { 'structs': }
     jenkins::plugin { 'timestamper': }
     jenkins::plugin { 'token-macro': }
     jenkins::plugin { 'icon-shim': }
