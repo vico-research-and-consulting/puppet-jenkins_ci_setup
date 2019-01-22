@@ -9,7 +9,7 @@ mod 'jenkinsci-jenkins',
 
 mod 'puppetlabs-docker', '1.0.4'
 #mod 'puppetlabs-docker', '2.0.0'
-mod 'puppetlabs-haproxy', '2.1.0'
+mod 'puppetlabs-haproxy', '2.2.0'
 
 
 #mod 'test_repo',
