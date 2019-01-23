@@ -10,27 +10,19 @@ class jenkins_ci_setup::profiles::jenkins (
     package { [ 'openjdk-8-jdk', 'openjdk-8-jdk-headless', 'openjdk-8-jre', 'openjdk-8-jre-headless', ]:
       ensure => installed,
     }
-    #  ->apt::source { 'jenkins':
-    #    location => 'http://pkg.jenkins-ci.org/debian-stable',
-    #    release  => 'binary/',
-    #    repos    => '',
-    #    key      => {
-    #      'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
-    #      'source' => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
-    #    },
-    #    include  => {
-    #      'src' => false,
-    #    },
-    #  }
     -> apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian-stable',
       release     => 'binary/',
       repos       => '',
-      key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
-      include_src => false,
-      key         => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
+      key         => {
+        'id' => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
+        'source' => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key'
+      },
+      include  => {
+        'src' => false,
+        'deb' => true,
+      },
     }
-
     # change this to a subscription in the real setup
     -> exec { 'jenkins update':
       command   => '/usr/bin/apt-get update',

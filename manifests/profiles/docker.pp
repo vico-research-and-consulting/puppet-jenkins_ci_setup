@@ -19,7 +19,7 @@ class jenkins_ci_setup::profiles::docker (
     owner  => "root",
     group  => "root",
     mode   => "0755",
-    source => 'puppet:///modules/vicodocker/docker-gc',
+    source => 'puppet:///modules/jenkins_ci_setup/docker-gc',
   }
   file { '/etc/cron.d/docker-gc':
     ensure  => file,
