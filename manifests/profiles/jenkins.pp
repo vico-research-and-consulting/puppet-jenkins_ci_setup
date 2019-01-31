@@ -51,8 +51,8 @@ class jenkins_ci_setup::profiles::jenkins (
 
     file_line { "Set CSP header":
       path    => '/etc/default/jenkins',
-      line    => 'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP="default-src \'self\'; style-src \'self\' \'unsafe-inline\'"',
-      match   => 'hudson.model.DirectoryBrowserSupport.CSP',
+      line    => 'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src \'self\'; style-src \'self\' \'unsafe-inline\'\""',
+      match   => '.*hudson.model.DirectoryBrowserSupport.CSP.*',
       require => Package['jenkins'],
       notify  => Service['jenkins'],
     }
