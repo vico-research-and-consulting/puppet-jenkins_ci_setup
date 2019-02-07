@@ -9,7 +9,7 @@ class jenkins_ci_setup::profiles::docker (
     dns           => [ "8.8.8.8", "9.9.9.9" ],
     docker_users  => [ 'jenkins', ],
     require       => Class['jenkins'],
-    socket_group  => 'adm',
+    socket_group  => 'docker',
     manage_kernel => false,
   }
   # docker-gc fetched from: https://github.com/spotify/docker-gc/docker-gc
