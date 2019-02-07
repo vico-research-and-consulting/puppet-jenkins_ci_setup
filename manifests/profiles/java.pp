@@ -15,7 +15,7 @@ class jenkins_ci_setup::profiles::java (
   file { '/var/lib/jenkins/.m2/':
     ensure => directory,
     owner  => "jenkins",
-    group  => "jenks",
+    group  => "jenkins",
     mode   => "0755",
   }
   if $maven_settings_template != "" {
