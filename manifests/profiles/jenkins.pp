@@ -78,6 +78,7 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::plugin { 'plain-credentials': }
     jenkins::plugin { 'display-url-api': }
     jenkins::plugin { 'docker-commons': }
+    jenkins::plugin { 'docker-java-api': }
     jenkins::plugin { 'docker-workflow': }
     jenkins::plugin { 'docker-plugin': }
     jenkins::plugin { 'docker-build-step': }

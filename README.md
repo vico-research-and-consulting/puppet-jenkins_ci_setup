@@ -49,6 +49,7 @@ How to use it
 
     c2241482815255368i9992aaaffaaffa
     ```
+  * Install suggested plugins
   * Invoke jenkins web ui: https://<dns-name>/
   * Change password of "admin" user
   * Get the public key of automatically generated ssh keypair
@@ -65,8 +66,25 @@ How to use it
       git clone <repourl>
       ```
   * Active Directory Config
-    * 
+    * Manage Jenkins -> Configure Global Security
+    * Hook: Enable security
+    * Select:  Active Directory -> Add domain
+    * Domainname: foo.local
+    * Domain controller: <ip> <ip>:<port>
+    * Bind DN: Jenkins
+    * Bind Password: <password>
+    * Execute "Test Domain"A
+  * Authorization
+    * Matrix-based security 
+    * Add Ad groups
+      * Authenticated Users : JOB - Build Cacncel,Configure, Read, Workspac; View: Read
+      * Developer Grous: Everything
   * Manage access to alle systems 
+    * Get the public key:
+      ```
+      ssh jenkins
+      cat /var/lib/jenkins/.ssh/id_rsa.pub
+      ```
     * Add the ssh public key to all target systems (jenkins slaves, remote execution servers - ideally using puppet)
       ```
       ssh <hostname>
@@ -83,7 +101,32 @@ How to use it
       su - jenkins
       ssh <hostname>
       ```
-   
+   * Configure System
+      * Create a config git repo and grant access to the /var/lib/jenkins/.ssh/id_rsa.pub key
+      * Approve key
+        ```
+        ssh gitlab-server
+        -> yes
+        ```
+      * SCM Sync configuration
+        * Git
+        * Add repo: git@<gitlab-server>:<repo>/jenkins-config.git
+        * No error message should occur</br>
+          (if footer displays error messages, delete /var/lib/jenkins/scm-sync-configuration.fail.log)
+      * Jenkins Location:
+         * Configure "Jenkins URL" and "System Admin e-mail address"
+      * Maven Scheduled Repository Cleaner
+         * "H 7 * * *"
+      * Extended E-mail Notification
+         * SMTP server: <server>
+         * Default user E-mail suffix: <domain>
+         * Reply To List: <Admin Mail>
+      * E-mail Notification
+        * SMTP server: <server>
+        *	Default user e-mail suffix: @<domain>
+        * ...
+
+  
 
 How to start:
 ------------------------------------
