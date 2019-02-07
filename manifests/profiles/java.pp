@@ -24,7 +24,7 @@ class jenkins_ci_setup::profiles::java (
       owner  => "jenkins",
       group  => "jenkins",
       mode   => "0644",
-      source => $maven_settings_template, 
+      content => template($maven_settings_template)
       require => File['/var/lib/jenkins/.m2/'],
     }
   }
