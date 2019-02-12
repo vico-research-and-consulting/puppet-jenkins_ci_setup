@@ -120,7 +120,7 @@ class jenkins_ci_setup::profiles::jenkins (
       jenkins::plugin { 'rocketchatnotifier': }
     }
 
-    if len($modules) > 0 {
+    if length($modules) > 0 {
       create_resources("jenkins::plugin", $modules)
     }
 
