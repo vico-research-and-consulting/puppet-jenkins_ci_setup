@@ -4,7 +4,7 @@ class jenkins_ci_setup::profiles::jenkins (
   String $jenkins_user_home    = "/var/lib/${user}",
   Integer $memory_in_megabytes = 256,
   Hash $user_hash              = {},
-  Array[String] $modules       = [],
+  Hash[String] $modules        = {},
   Boolean $default_modules     = true,
 )
   {
