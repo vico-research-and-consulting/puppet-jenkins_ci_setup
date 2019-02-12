@@ -66,7 +66,7 @@ class jenkins_ci_setup::profiles::jenkins (
       notify  => Service['jenkins'],
     }
 
-    if $jenkins_default_modules {
+    if $default_modules {
       jenkins::plugin { 'ansicolor': }
       jenkins::plugin { 'workflow-job': }
       jenkins::plugin { 'pipeline-multibranch-defaults': }
