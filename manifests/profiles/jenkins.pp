@@ -4,6 +4,8 @@ class jenkins_ci_setup::profiles::jenkins (
   String $jenkins_user_home    = "/var/lib/${user}",
   Integer $memory_in_megabytes = 256,
   Hash $user_hash              = {},
+  Array[String] $modules       = [],
+  Boolean $default_modules     = true,
 )
   {
 
@@ -11,11 +13,11 @@ class jenkins_ci_setup::profiles::jenkins (
       ensure => installed,
     }
     -> apt::source { 'jenkins':
-      location    => 'http://pkg.jenkins-ci.org/debian-stable',
-      release     => 'binary/',
-      repos       => '',
-      key         => {
-        'id' => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
+      location => 'http://pkg.jenkins-ci.org/debian-stable',
+      release  => 'binary/',
+      repos    => '',
+      key      => {
+        'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
         'source' => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key'
       },
       include  => {
@@ -51,7 +53,8 @@ class jenkins_ci_setup::profiles::jenkins (
 
     file_line { "Set CSP header":
       path    => '/etc/default/jenkins',
-      line    => 'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src \'self\'; style-src \'self\' \'unsafe-inline\'\""',
+      line    =>
+        'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src \'self\'; style-src \'self\' \'unsafe-inline\'\""',
       match   => '.*hudson.model.DirectoryBrowserSupport.CSP.*',
       require => Package['jenkins'],
       notify  => Service['jenkins'],
@@ -63,57 +66,63 @@ class jenkins_ci_setup::profiles::jenkins (
       notify  => Service['jenkins'],
     }
 
-    jenkins::plugin { 'ansicolor': }
-    jenkins::plugin { 'workflow-job': }
-    jenkins::plugin { 'pipeline-multibranch-defaults': }
-    jenkins::plugin { 'workflow-multibranch': }
-    jenkins::plugin { 'config-file-provider': }
-    jenkins::plugin { 'branch-api': }
-    jenkins::plugin { 'cloudbees-folder': }
-    jenkins::plugin { 'active-directory': }
-    jenkins::plugin { 'authentication-tokens': }
-    jenkins::plugin { 'bouncycastle-api': }
-    jenkins::plugin { 'build-timeout': }
-    jenkins::plugin { 'credentials-binding': }
-    jenkins::plugin { 'plain-credentials': }
-    jenkins::plugin { 'display-url-api': }
-    jenkins::plugin { 'docker-commons': }
-    jenkins::plugin { 'docker-java-api': }
-    jenkins::plugin { 'docker-workflow': }
-    jenkins::plugin { 'docker-plugin': }
-    jenkins::plugin { 'docker-build-step': }
-    jenkins::plugin { 'durable-task': }
-    jenkins::plugin { 'email-ext': }
-    jenkins::plugin { 'external-monitor-job': }
-    jenkins::plugin { 'ace-editor': }
-    jenkins::plugin { 'jquery-detached': }
-    jenkins::plugin { 'git': }
-    jenkins::plugin { 'ldap': }
-    jenkins::plugin { 'mailer': }
-    jenkins::plugin { 'mapdb-api': }
-    jenkins::plugin { 'matrix-auth': }
-    jenkins::plugin { 'matrix-project': }
-    jenkins::plugin { 'antisamy-markup-formatter': }
-    jenkins::plugin { 'pam-auth': }
-    jenkins::plugin { 'workflow-api': }
-    jenkins::plugin { 'workflow-cps': }
-    jenkins::plugin { 'workflow-durable-task-step': }
-    jenkins::plugin { 'workflow-scm-step': }
-    jenkins::plugin { 'workflow-step-api': }
-    jenkins::plugin { 'pipeline-stage-step': }
-    jenkins::plugin { 'workflow-basic-steps': }
-    jenkins::plugin { 'pipeline-utility-steps': }
-    jenkins::plugin { 'workflow-support': }
-    jenkins::plugin { 'scm-api': }
-    jenkins::plugin { 'script-security': }
-    jenkins::plugin { 'ssh-credentials': }
-    jenkins::plugin { 'ssh-slaves': }
-    jenkins::plugin { 'timestamper': }
-    jenkins::plugin { 'token-macro': }
-    jenkins::plugin { 'icon-shim': }
-    jenkins::plugin { 'scm-sync-configuration': }
-    jenkins::plugin { 'htmlpublisher': }
-    jenkins::plugin { 'rocketchatnotifier': }
+    if $jenkins_default_modules {
+      jenkins::plugin { 'ansicolor': }
+      jenkins::plugin { 'workflow-job': }
+      jenkins::plugin { 'pipeline-multibranch-defaults': }
+      jenkins::plugin { 'workflow-multibranch': }
+      jenkins::plugin { 'config-file-provider': }
+      jenkins::plugin { 'branch-api': }
+      jenkins::plugin { 'cloudbees-folder': }
+      jenkins::plugin { 'active-directory': }
+      jenkins::plugin { 'authentication-tokens': }
+      jenkins::plugin { 'bouncycastle-api': }
+      jenkins::plugin { 'build-timeout': }
+      jenkins::plugin { 'credentials-binding': }
+      jenkins::plugin { 'plain-credentials': }
+      jenkins::plugin { 'display-url-api': }
+      jenkins::plugin { 'docker-commons': }
+      jenkins::plugin { 'docker-java-api': }
+      jenkins::plugin { 'docker-workflow': }
+      jenkins::plugin { 'docker-plugin': }
+      jenkins::plugin { 'docker-build-step': }
+      jenkins::plugin { 'durable-task': }
+      jenkins::plugin { 'email-ext': }
+      jenkins::plugin { 'external-monitor-job': }
+      jenkins::plugin { 'ace-editor': }
+      jenkins::plugin { 'jquery-detached': }
+      jenkins::plugin { 'git': }
+      jenkins::plugin { 'ldap': }
+      jenkins::plugin { 'mailer': }
+      jenkins::plugin { 'mapdb-api': }
+      jenkins::plugin { 'matrix-auth': }
+      jenkins::plugin { 'matrix-project': }
+      jenkins::plugin { 'antisamy-markup-formatter': }
+      jenkins::plugin { 'pam-auth': }
+      jenkins::plugin { 'workflow-api': }
+      jenkins::plugin { 'workflow-cps': }
+      jenkins::plugin { 'workflow-durable-task-step': }
+      jenkins::plugin { 'workflow-scm-step': }
+      jenkins::plugin { 'workflow-step-api': }
+      jenkins::plugin { 'pipeline-stage-step': }
+      jenkins::plugin { 'workflow-basic-steps': }
+      jenkins::plugin { 'pipeline-utility-steps': }
+      jenkins::plugin { 'workflow-support': }
+      jenkins::plugin { 'scm-api': }
+      jenkins::plugin { 'script-security': }
+      jenkins::plugin { 'ssh-credentials': }
+      jenkins::plugin { 'ssh-slaves': }
+      jenkins::plugin { 'timestamper': }
+      jenkins::plugin { 'token-macro': }
+      jenkins::plugin { 'icon-shim': }
+      jenkins::plugin { 'scm-sync-configuration': }
+      jenkins::plugin { 'htmlpublisher': }
+      jenkins::plugin { 'rocketchatnotifier': }
+    }
+
+    if len($modules) > 0 {
+      create_resources("jenkins::plugin", $modules)
+    }
 
     file { "${jenkins_user_home}/.ssh":
       ensure  => directory,
