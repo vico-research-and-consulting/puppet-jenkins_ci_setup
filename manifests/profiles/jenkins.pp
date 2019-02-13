@@ -68,6 +68,13 @@ class jenkins_ci_setup::profiles::jenkins (
 
     if $default_modules {
       jenkins::plugin { 'ansicolor': }
+      jenkins::plugin { 'jsch': }
+      jenkins::plugin { 'junit': }
+      jenkins::plugin { 'subversion': }
+      jenkins::plugin { 'git-client': }
+      jenkins::plugin { 'apache-httpcomponents-client-4-api': }
+      jenkins::plugin { 'jackson2-api': }
+      jenkins::plugin { 'matrix-project': }
       jenkins::plugin { 'workflow-job': }
       jenkins::plugin { 'pipeline-multibranch-defaults': }
       jenkins::plugin { 'workflow-multibranch': }

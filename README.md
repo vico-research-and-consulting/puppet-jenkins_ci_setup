@@ -77,7 +77,7 @@ How to use it
   * Authorization
     * Matrix-based security 
     * Add Ad groups
-      * Authenticated Users : JOB - Build Cacncel,Configure, Read, Workspac; View: Read
+      * Authenticated Users : JOB - Build Cancel, Configure, Read, Workspac; View: Read
       * Developer Grous: Everything
   * Manage access to alle systems 
     * Get the public key:
