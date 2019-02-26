@@ -68,7 +68,6 @@ class jenkins_ci_setup::profiles::jenkins (
 
     if $default_modules {
       jenkins::plugin { 'gitlab': }
-      jenkins::plugin { 'credentials': }
       jenkins::plugin { 'command-launcher': }
       jenkins::plugin { 'ansicolor': }
       jenkins::plugin { 'extended-choice-parameter': }
