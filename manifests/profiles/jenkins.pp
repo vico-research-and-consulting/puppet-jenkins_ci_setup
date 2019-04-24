@@ -80,6 +80,7 @@ class jenkins_ci_setup::profiles::jenkins (
       jenkins::plugin { 'apache-httpcomponents-client-4-api': }
       jenkins::plugin { 'jackson2-api': }
       jenkins::plugin { 'workflow-job': }
+      jenkins::plugin { 'workflow-aggregator': }
       jenkins::plugin { 'pipeline-multibranch-defaults': }
       jenkins::plugin { 'workflow-multibranch': }
       jenkins::plugin { 'config-file-provider': }
