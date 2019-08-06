@@ -63,7 +63,6 @@ class jenkins_ci_setup::profiles::jenkins (
     jenkins::sysconfig { 'JENKINS_ARGS':
       value   => '--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT --httpListenAddress=127.0.0.1',
       require => Package['jenkins'],
-      notify  => Service['jenkins'],
     }
 
     if $default_modules {
