@@ -7,8 +7,6 @@
   "source": "git@github.com:scoopex/puppet-jenkins_ci_setup.git",
   "project_page": "https://github.com/scoopex/puppet-jenkins_ci_setup",
   "dependencies": [
-         { "name": "puppetlabs-apt","version_requirement": "< 6.3.0" },
-         { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.24.0" }
   ],
   "issues_url": null
 }
