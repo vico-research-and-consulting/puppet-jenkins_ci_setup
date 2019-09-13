@@ -126,7 +126,6 @@ class jenkins_ci_setup::profiles::jenkins (
       jenkins::plugin { 'timestamper': }
       jenkins::plugin { 'token-macro': }
       jenkins::plugin { 'icon-shim': }
-      jenkins::plugin { 'scm-sync-configuration': }
       jenkins::plugin { 'htmlpublisher': }
       jenkins::plugin { 'rocketchatnotifier': }
     }
