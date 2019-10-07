@@ -13,6 +13,7 @@ wget http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
 
 PLUGIN_LIST="$(java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ list-plugins)"
 
+set -x 
 java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ install-plugin $(echo "$PLUGIN_LIST"|awk '{print $1}'|xargs)
 
 java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
@@ -20,6 +21,22 @@ apt-get update
 systemctl stop jenkins
 apt-get install jenkins
 systemctl start jenkins
-java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ version
 
+SUCCESS="false"
+RES=""
+for i in `seq 1 10`; do
+  sleep 30
+  RES="$(java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ version 2>&1)"
+  if [ "$?" = "0" ];then
+      SUCCESS="true"
+      break
+  fi
+done
 
+if [ "$SUCCESS" = "true" ];then
+   echo "UPGRADE $RES WAS SUCCESSFUL"
+   exit 0
+else
+   echo "UPGRADE WAS NOT SUCCESSFUL"
+   exit 1
+fi
