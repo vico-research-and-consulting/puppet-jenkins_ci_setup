@@ -1,13 +1,86 @@
 class jenkins_ci_setup::profiles::jenkins (
-  String $user                 = 'jenkins',
-  String $group                = 'jenkins',
-  String $jenkins_user_home    = "/var/lib/${user}",
-  Integer $memory_in_megabytes = 256,
-  Hash $user_hash              = {},
-  Hash $modules                = {},
-  Boolean $default_modules     = true,
+  String $user                              = 'jenkins',
+  String $group                             = 'jenkins',
+  String $jenkins_user_home                 = "/var/lib/${user}",
+  Optional[String] $admin_password_cerds    = undef,
+  Optional[String] $unattended_upgrade_cron = undef,
+  Integer $memory_in_megabytes              = 512,
+  Hash $user_hash                           = {},
+  Hash $modules                             = {},
+  Boolean $default_plugins                  = true,
+  Hash $plugin_hash                         = {},
+  Boolean $purge_plugins                    = false,
 )
   {
+
+    if $default_modules {
+      $default_modules_hash = {
+        'basic-branch-build-strategies'      => {},
+        'ws-ws-replacement'                  => {},
+        'command-launcher'                   => {},
+        'ansicolor'                          => {},
+        'extended-choice-parameter'          => {},
+        'jquery'                             => {},
+        'jsch'                               => {},
+        'junit'                              => {},
+        'subversion'                         => {},
+        'git-client'                         => {},
+        'apache-httpcomponents-client-4-api' => {},
+        'jackson2-api'                       => {},
+        'workflow-job'                       => {},
+        'workflow-aggregator'                => {},
+        'pipeline-multibranch-defaults'      => {},
+        'workflow-multibranch'               => {},
+        'config-file-provider'               => {},
+        'branch-api'                         => {},
+        'cloudbees-folder'                   => {},
+        'active-directory'                   => {},
+        'authentication-tokens'              => {},
+        'bouncycastle-api'                   => {},
+        'build-timeout'                      => {},
+        'credentials-binding'                => {},
+        'plain-credentials'                  => {},
+        'display-url-api'                    => {},
+        'docker-commons'                     => {},
+        'docker-java-api'                    => {},
+        'docker-workflow'                    => {},
+        'docker-plugin'                      => {},
+        'docker-build-step'                  => {},
+        'durable-task'                       => {},
+        'email-ext'                          => {},
+        'external-monitor-job'               => {},
+        'ace-editor'                         => {},
+        'jquery-detached'                    => {},
+        'git'                                => {},
+        'ldap'                               => {},
+        'mailer'                             => {},
+        'mapdb-api'                          => {},
+        'matrix-auth'                        => {},
+        'matrix-project'                     => {},
+        'antisamy-markup-formatter'          => {},
+        'pam-auth'                           => {},
+        'workflow-api'                       => {},
+        'workflow-cps'                       => {},
+        'workflow-durable-task-step'         => {},
+        'workflow-scm-step'                  => {},
+        'workflow-step-api'                  => {},
+        'pipeline-stage-step'                => {},
+        'workflow-basic-steps'               => {},
+        'pipeline-utility-steps'             => {},
+        'workflow-support'                   => {},
+        'scm-api'                            => {},
+        'script-security'                    => {},
+        'ssh-credentials'                    => {},
+        'ssh-slaves'                         => {},
+        'timestamper'                        => {},
+        'token-macro'                        => {},
+        'icon-shim'                          => {},
+        'htmlpublisher'                      => {},
+        'rocketchatnotifier'                 => {},
+      }
+    } else {
+      $default_modules_list = []
+    }
 
     package { [ 'openjdk-8-jdk', 'openjdk-8-jdk-headless', 'openjdk-8-jre', 'openjdk-8-jre-headless', ]:
       ensure => installed,
@@ -35,11 +108,15 @@ class jenkins_ci_setup::profiles::jenkins (
         '/usr/bin/test -n "$(/usr/bin/find /etc/apt/sources.list.d/ /etc/apt/sources.list -newer /var/cache/apt/pkgcache.bin)"'
       ,
     } -> class { '::jenkins':
-      repo         => false,
-      install_java => false,
-      #executors => 4,
-      #user_hash => $user_hash,
-      #cli_ssh_keyfile => "${jenkins_user_home}/.ssh/id_rsa",
+      repo              => false,
+      install_java      => false,
+      cli_remoting_free => true,
+      plugin_hash       => deep_merge($plugin_hash, $default_modules_hash),
+      #cli               => true,
+      #cli_password_file => $admin_password_creds,
+      #executors         => 4,
+      #cli_ssh_keyfile   => "${jenkins_user_home}/.ssh/id_rsa",
+      purge_plugins     => $purge_plugins,
     }
 
     # The jenkins module utilizes file_line, JAVA_ARGS is prefixed by "export" to prevent duplicate matches
@@ -65,75 +142,6 @@ class jenkins_ci_setup::profiles::jenkins (
       require => Package['jenkins'],
     }
 
-    if $default_modules {
-      jenkins::plugin { 'basic-branch-build-strategies': }
-      jenkins::plugin { 'ws-ws-replacement': }
-      jenkins::plugin { 'command-launcher': }
-      jenkins::plugin { 'ansicolor': }
-      jenkins::plugin { 'extended-choice-parameter': }
-      jenkins::plugin { 'jquery': }
-      jenkins::plugin { 'jsch': }
-      jenkins::plugin { 'junit': }
-      jenkins::plugin { 'subversion': }
-      jenkins::plugin { 'git-client': }
-      jenkins::plugin { 'apache-httpcomponents-client-4-api': }
-      jenkins::plugin { 'jackson2-api': }
-      jenkins::plugin { 'workflow-job': }
-      jenkins::plugin { 'workflow-aggregator': }
-      jenkins::plugin { 'pipeline-multibranch-defaults': }
-      jenkins::plugin { 'workflow-multibranch': }
-      jenkins::plugin { 'config-file-provider': }
-      jenkins::plugin { 'branch-api': }
-      jenkins::plugin { 'cloudbees-folder': }
-      jenkins::plugin { 'active-directory': }
-      jenkins::plugin { 'authentication-tokens': }
-      jenkins::plugin { 'bouncycastle-api': }
-      jenkins::plugin { 'build-timeout': }
-      jenkins::plugin { 'credentials-binding': }
-      jenkins::plugin { 'plain-credentials': }
-      jenkins::plugin { 'display-url-api': }
-      jenkins::plugin { 'docker-commons': }
-      jenkins::plugin { 'docker-java-api': }
-      jenkins::plugin { 'docker-workflow': }
-      jenkins::plugin { 'docker-plugin': }
-      jenkins::plugin { 'docker-build-step': }
-      jenkins::plugin { 'durable-task': }
-      jenkins::plugin { 'email-ext': }
-      jenkins::plugin { 'external-monitor-job': }
-      jenkins::plugin { 'ace-editor': }
-      jenkins::plugin { 'jquery-detached': }
-      jenkins::plugin { 'git': }
-      jenkins::plugin { 'ldap': }
-      jenkins::plugin { 'mailer': }
-      jenkins::plugin { 'mapdb-api': }
-      jenkins::plugin { 'matrix-auth': }
-      jenkins::plugin { 'matrix-project': }
-      jenkins::plugin { 'antisamy-markup-formatter': }
-      jenkins::plugin { 'pam-auth': }
-      jenkins::plugin { 'workflow-api': }
-      jenkins::plugin { 'workflow-cps': }
-      jenkins::plugin { 'workflow-durable-task-step': }
-      jenkins::plugin { 'workflow-scm-step': }
-      jenkins::plugin { 'workflow-step-api': }
-      jenkins::plugin { 'pipeline-stage-step': }
-      jenkins::plugin { 'workflow-basic-steps': }
-      jenkins::plugin { 'pipeline-utility-steps': }
-      jenkins::plugin { 'workflow-support': }
-      jenkins::plugin { 'scm-api': }
-      jenkins::plugin { 'script-security': }
-      jenkins::plugin { 'ssh-credentials': }
-      jenkins::plugin { 'ssh-slaves': }
-      jenkins::plugin { 'timestamper': }
-      jenkins::plugin { 'token-macro': }
-      jenkins::plugin { 'icon-shim': }
-      jenkins::plugin { 'htmlpublisher': }
-      jenkins::plugin { 'rocketchatnotifier': }
-    }
-
-    if length($modules) > 0 {
-      create_resources("jenkins::plugin", $modules)
-    }
-
     file { "${jenkins_user_home}/.ssh":
       ensure  => directory,
       mode    => '0600',
@@ -149,5 +157,62 @@ class jenkins_ci_setup::profiles::jenkins (
         "${jenkins_user_home}/.ssh/id_rsa.pub",
       ],
       path    => ['/usr/bin', ],
+    }
+
+    file { "/etc/jenkins":
+      ensure  => directory,
+      mode    => '0700',
+      owner   => 'root',
+      group   => 'root',
+      require => User['jenkins'],
+    }
+
+    file { "/usr/local/sbin/jenkins-unattended-upgrades":
+      ensure  => file,
+      mode    => '0700',
+      owner   => 'root',
+      group   => 'root',
+      source  => 'puppet:///modules/jenkins_ci_setup/jenkins-unattended-upgrades',
+      require => File['/etc/jenkins'],
+    }
+    file { "/usr/local/sbin/jenkins-cli":
+      ensure  => file,
+      mode    => '0700',
+      owner   => 'root',
+      group   => 'root',
+      source  => 'puppet:///modules/jenkins_ci_setup/jenkins-cli',
+      require => File['/etc/jenkins'],
+    }
+
+    if $admin_password_creds {
+      file { "/etc/jenkins/admin-password":
+        ensure  => file,
+        mode    => '0600',
+        owner   => 'root',
+        group   => 'root',
+        content => "$admin_password_creds",
+        require => File['/etc/jenkins'],
+      }
+    } else {
+      file { "/etc/jenkins/admin-password":
+        ensure => absent,
+      }
+    }
+
+    if $unattended_upgrade_cron != "" {
+      file { "/etc/cron.d/jenkins-unattended-upgrades":
+        ensure  => directory,
+        mode    => '0755',
+        owner   => 'root',
+        group   => 'root',
+        content => "# created by puppet
+${unattended_upgrade_cron} root /usr/local/sbin/jenkins-unattended-upgrades 2>&1| logger -t jenkins-unattended-upgrades
+        ",
+        require => File['/etc/jenkins'],
+      }
+    } else {
+      file { "/etc/cron.d/jenkins-unattended-upgrades":
+        ensure => absent,
+      }
     }
   }

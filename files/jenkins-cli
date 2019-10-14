@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# prepare info file
+INFO_FILE_DIR="/usr/share/jenkins"
+TOKEN="/etc/jenkins/admin-password"
+
+if [ -f "$TOKEN" ];then
+    echo "ERROR: no such file $TOKEN"
+    exit 1
+fi
+
+mkdir -p $INFO_FILE_DIR
+# get current version of cli JAR
+
+cd $INFO_FILE_DIR
+
+if ( ! [ -f "jenkins-cli.jar" ] );then
+    unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
+fi
+
+set -x
+java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ $@
+

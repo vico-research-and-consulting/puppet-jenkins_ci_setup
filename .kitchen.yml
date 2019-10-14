@@ -23,23 +23,20 @@ busser:
   ruby_bindir: /usr/bin
 
 platforms:
-    # vagrant automatically generates a hostname, if that exceeds 64 characters vbox fails, see bug #6
   - name: ubuntu-puppet-jenkins
     driver_plugin: vagrant
     driver:
       vagrantfile_erb: vagrantfiles/Vagrantfile-debianoid.erb
-      box: ubuntu/xenial64
-      box_url: https://app.vagrantup.com/ubuntu/boxes/xenial64
+      box: ubuntu/bionic64
+      box_url: https://app.vagrantup.com/ubuntu/boxes/bionic64
       customize:
         memory: 1024
       synced_folders:
         - ['./files', '/tmp/files']
-      #box: bento/ubuntu-17.10
-      #box_url: https://app.vagrantup.com/bento/boxes/ubuntu-17.10
       network:
-      - ["forwarded_port", {guest: 80, host: 80}]
-      - ["forwarded_port", {guest: 443, host: 443}]
-      #- ['private_network', {ip: '192.168.33.33'}]
+        - ["forwarded_port", {guest: 80, host: 80}]
+        - ["forwarded_port", {guest: 443, host: 443}]
+        #- ['private_network', {ip: '192.168.33.33'}]
     # vagrant automatically generates a hostname, if that exceeds 64 characters vbox fails, see bug #6
 suites:
   - name: default
