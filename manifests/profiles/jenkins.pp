@@ -13,8 +13,8 @@ class jenkins_ci_setup::profiles::jenkins (
 )
   {
 
-    if $default_modules {
-      $default_modules_hash = {
+    if $default_plugins {
+      $default_plugins_hash = {
         'basic-branch-build-strategies'      => {},
         'ws-ws-replacement'                  => {},
         'command-launcher'                   => {},
@@ -79,7 +79,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'rocketchatnotifier'                 => {},
       }
     } else {
-      $default_modules_list = []
+      $default_plugins_hash = {}
     }
 
     package { [ 'openjdk-8-jdk', 'openjdk-8-jdk-headless', 'openjdk-8-jre', 'openjdk-8-jre-headless', ]:
@@ -111,7 +111,7 @@ class jenkins_ci_setup::profiles::jenkins (
       repo              => false,
       install_java      => false,
       cli_remoting_free => true,
-      plugin_hash       => deep_merge($plugin_hash, $default_modules_hash),
+      plugin_hash       => deep_merge($plugin_hash, $default_plugins_hash),
       #cli               => true,
       #cli_password_file => $admin_password_creds,
       #executors         => 4,
