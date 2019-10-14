@@ -4,7 +4,7 @@
 INFO_FILE_DIR="/usr/share/jenkins"
 TOKEN="/etc/jenkins/admin-password"
 
-if [ -f "$TOKEN" ];then
+if (! [ -f "$TOKEN" ] );then
     echo "ERROR: no such file $TOKEN"
     exit 1
 fi
