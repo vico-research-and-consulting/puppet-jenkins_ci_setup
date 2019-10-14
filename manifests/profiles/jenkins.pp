@@ -2,7 +2,7 @@ class jenkins_ci_setup::profiles::jenkins (
   String $user                              = 'jenkins',
   String $group                             = 'jenkins',
   String $jenkins_user_home                 = "/var/lib/${user}",
-  Optional[String] $admin_password_cerds    = undef,
+  Optional[String] $admin_credentials       = undef,
   Optional[String] $unattended_upgrade_cron = undef,
   Integer $memory_in_megabytes              = 512,
   Hash $user_hash                           = {},
@@ -184,13 +184,13 @@ class jenkins_ci_setup::profiles::jenkins (
       require => File['/etc/jenkins'],
     }
 
-    if $admin_password_creds {
+    if $admin_credentials {
       file { "/etc/jenkins/admin-password":
         ensure  => file,
         mode    => '0600',
         owner   => 'root',
         group   => 'root',
-        content => "$admin_password_creds",
+        content => "$admin_credentials",
         require => File['/etc/jenkins'],
       }
     } else {
