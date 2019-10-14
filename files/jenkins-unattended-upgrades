@@ -25,32 +25,27 @@ echo "INFO: invoking plugin upgrades"
 echo
 echo "$PLUGIN_LIST"
 java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ install-plugin $(echo "$PLUGIN_LIST"|awk '{print $1}'|xargs)
-if [ "$?" = "0" ];then
-  SUCCESS="true"
-  break
-fi
 
-if (apt-get -u upgrade -s|grep -q " jenkins ");then
-    echo "INFO: update for jenkins itself available, upgrading"
-    java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
-    apt-get update
-    systemctl stop jenkins
-    apt-get install jenkins
-    unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
-    systemctl start jenkins
+echo "INFO: blocking jenkins"
+java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
+apt-get update
+echo "INFO: shutdown and upgrade"
+systemctl stop jenkins
+apt-get install jenkins
+unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
+systemctl start jenkins
 
 
-    RES=""
-    for i in `seq 1 10`; do
-      sleep 30
-      echo "waiting for jenkins to be back"
-      RES="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ version 2>&1)"
-      if [ "$?" = "0" ];then
-          SUCCESS="true"
-          break
-      fi
-    done
-fi
+RES=""
+for i in `seq 1 10`; do
+  sleep 30
+  echo "waiting for jenkins to be back after restart"
+  RES="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ version 2>&1)"
+  if [ "$?" = "0" ];then
+      SUCCESS="true"
+      break
+  fi
+done
 
 if [ "$SUCCESS" = "true" ];then
    echo "UPGRADE $RES WAS SUCCESSFUL"
