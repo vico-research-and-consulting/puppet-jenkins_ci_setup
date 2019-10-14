@@ -18,26 +18,39 @@ if ( ! [ -f "jenkins-cli.jar" ] );then
     unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
 fi
 
+SUCCESS="false"
 PLUGIN_LIST="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ list-plugins)"
 
-java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ install-plugin $(echo "$PLUGIN_LIST"|awk '{print $1}'|xargs)
-java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
-apt-get update
-systemctl stop jenkins
-apt-get install jenkins
-unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
-systemctl start jenkins
+echo "INFO: invoking plugin upgrades"
+echo
+echo "$PLUGIN_LIST"
+java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ install-plugin $(echo "$PLUGIN_LIST"|awk '{print $1}'|xargs)
+if [ "$?" = "0" ];then
+  SUCCESS="true"
+  break
+fi
 
-SUCCESS="false"
-RES=""
-for i in `seq 1 10`; do
-  sleep 30
-  RES="$(java -jar jenkins-cli.jar -auth $TOKEN -s http://127.0.0.1:8080/ version 2>&1)"
-  if [ "$?" = "0" ];then
-      SUCCESS="true"
-      break
-  fi
-done
+if (apt-get -u upgrade -s|grep -q " jenkins ");then
+    echo "INFO: update for jenkins itself available, upgrading"
+    java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
+    apt-get update
+    systemctl stop jenkins
+    apt-get install jenkins
+    unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
+    systemctl start jenkins
+
+
+    RES=""
+    for i in `seq 1 10`; do
+      sleep 30
+      echo "waiting for jenkins to be back"
+      RES="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ version 2>&1)"
+      if [ "$?" = "0" ];then
+          SUCCESS="true"
+          break
+      fi
+    done
+fi
 
 if [ "$SUCCESS" = "true" ];then
    echo "UPGRADE $RES WAS SUCCESSFUL"
