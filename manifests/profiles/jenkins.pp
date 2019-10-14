@@ -164,7 +164,6 @@ class jenkins_ci_setup::profiles::jenkins (
       mode    => '0700',
       owner   => 'root',
       group   => 'root',
-      require => User['jenkins'],
     }
 
     file { "/usr/local/sbin/jenkins-unattended-upgrades":
@@ -199,9 +198,9 @@ class jenkins_ci_setup::profiles::jenkins (
       }
     }
 
-    if $unattended_upgrade_cron != "" {
+    if $unattended_upgrade_cron {
       file { "/etc/cron.d/jenkins-unattended-upgrades":
-        ensure  => directory,
+        ensure  => file,
         mode    => '0755',
         owner   => 'root',
         group   => 'root',
