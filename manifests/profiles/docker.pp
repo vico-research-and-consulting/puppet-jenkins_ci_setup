@@ -1,5 +1,6 @@
 class jenkins_ci_setup::profiles::docker (
-  String $user = $jenkins_ci_setup::profiles::jenkins::user
+  String $user = $jenkins_ci_setup::profiles::jenkins::user,
+  Optional[String] $docker_config = undef, 
 ) {
 
   class { 'docker':
@@ -30,5 +31,21 @@ class jenkins_ci_setup::profiles::docker (
 0 */8 * * * root /usr/local/sbin/docker-gc 2>&1 |logger -t docker-gc
       "
   }
+  if $docker_config {
+    file { '/var/lib/jenkins/.docker/':
+      ensure  => directory,
+      owner   => $user,
+      group   => $user,
+      mode    => "700",
+    }
+    -> file { '/var/lib/jenkins/.docker/config.json':
+      ensure  => file,
+      owner   => $user,
+      group   => $user,
+      mode    => "600",
+      source => $docker_config,
+    }
+  }
+
 }
 

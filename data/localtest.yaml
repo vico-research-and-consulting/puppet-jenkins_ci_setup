@@ -1,5 +1,6 @@
 ---
 jenkins_ci_setup::profiles::haproxy::pem_certificate: "/etc/ssl/localtest.pem"
+jenkins_ci_setup::profiles::docker::docker_config: "puppet:///modules/jenkins_ci_setup/docker.json"
 
 jenkins::cli: true
 jenkins::cli_password_file:
