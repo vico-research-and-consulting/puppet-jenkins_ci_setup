@@ -1,6 +1,16 @@
 class jenkins_ci_setup::profiles::haproxy (
-  String $pem_certificate
+  String $pem_certificate,
+  Optional[String] $cert_package_version = "present",
+  Optional[String] $cert_package_name = undef,
 ) {
+
+  if $cert_package_name {
+    package{ $cert_package_name:
+      ensure => $cert_package_version,
+      notify  => Service['haproxy'],
+    }
+  }
+
   class { 'haproxy':
     global_options   => {
       'maxconn' => undef,
