@@ -1,6 +1,7 @@
 class jenkins_ci_setup::profiles::java (
     String $maven_settings_template = "",
     Hash $maven_settings_config     = {},
+    String $java_package_extra      = "openjdk-11-jdk",
 ) {
   package{ "maven": }
 
@@ -29,9 +30,10 @@ class jenkins_ci_setup::profiles::java (
     }
   }
 
-  package{'openjdk-11-jdk':
+  package{$java_package_extra:
     ensure => present,
   }
+
   exec { 'update-java-alternatives -s java-1.8.0-openjdk-amd64 -v':
       path      => '/usr/local/sbin:/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin',
       user      => 'root',

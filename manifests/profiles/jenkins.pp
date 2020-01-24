@@ -77,6 +77,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'icon-shim'                          => {},
         'htmlpublisher'                      => {},
         'rocketchatnotifier'                 => {},
+        'configuration-as-code'              => {},
       }
     } else {
       $default_plugins_hash = {}
