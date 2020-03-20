@@ -28,7 +28,7 @@ class jenkins_ci_setup::profiles::docker (
     mode    => "0644",
     content => "
 0 */8 * * * root /usr/local/sbin/docker-gc 2>&1 |logger -t docker-gc
-0 23 * * * root /usr/bin/docker image prune -a --filter "until=48h" -f 2>&1|logger -t docker-image-prune
+0 23 * * * root /usr/bin/docker image prune -a --filter 'until=48h' -f 2>&1|logger -t docker-image-prune
       "
   }
   if $docker_config {
