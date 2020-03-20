@@ -11,7 +11,6 @@ class jenkins_ci_setup::profiles::docker (
     docker_users  => [ 'jenkins', ],
     require       => Class['jenkins'],
     socket_group  => 'docker',
-    manage_kernel => false,
   }
   # docker-gc fetched from: https://github.com/spotify/docker-gc/docker-gc
   # https://raw.githubusercontent.com/spotify/docker-gc/master/docker-gc
@@ -29,6 +28,7 @@ class jenkins_ci_setup::profiles::docker (
     mode    => "0644",
     content => "
 0 */8 * * * root /usr/local/sbin/docker-gc 2>&1 |logger -t docker-gc
+0 23 * * * * root /usr/bin/docker image prune -a --filter "until=48h" -f 2>&1|logger -t docker-image-prune
       "
   }
   if $docker_config {

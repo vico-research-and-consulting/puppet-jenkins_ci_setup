@@ -4,7 +4,7 @@
 forge "https://forgeapi.puppetlabs.com"
 
 mod 'puppet-jenkins', '2.0.0'
-mod 'puppetlabs-docker', '1.0.4'
+mod 'puppetlabs-docker', '3.9.1'
 mod 'puppetlabs-haproxy', '2.2.0'
 mod 'puppetlabs-apt', '<= 7.0.1'
 mod 'puppetlabs/stdlib', '>= 4.24.0'
