@@ -22,6 +22,16 @@ if (! [ -f "$TOKEN" ] );then
     exit 1
 fi
 
+if [ -f "/var/lock/suppress-jenkins-upgrade" ];then
+    if (find /var/lock/suppress-jenkins-upgrade -mtime 14 |grep -q "/var/lock/suppress-jenkins-upgrade");then
+      sendStatus "OK: JENKINS upgraded is suppressed for 14 days now, performing upgrade"
+      rm -f /var/lock/suppress-jenkins-upgrade
+    else
+      sendStatus "WARN: JENKINS upgraded is suppressed, stopping here for 14 days"
+      exit 0
+    fi
+fi
+
 mkdir -p $INFO_FILE_DIR
 # get current version of cli JAR
 
