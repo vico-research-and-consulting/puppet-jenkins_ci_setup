@@ -11,6 +11,7 @@ class jenkins_ci_setup::profiles::docker (
     docker_users  => [ 'jenkins', ],
     require       => Class['jenkins'],
     socket_group  => 'docker',
+    manage_kernel => false,
   }
   # docker-gc fetched from: https://github.com/spotify/docker-gc/docker-gc
   # https://raw.githubusercontent.com/spotify/docker-gc/master/docker-gc
