@@ -14,8 +14,11 @@ sendStatus(){
 INFO_FILE_DIR="/usr/share/jenkins"
 TOKEN="/etc/jenkins/admin-password"
 
+
+sendStatus "OK: STARTING"
+
 if (! [ -f "$TOKEN" ] );then
-    echo "ERROR: no such file $TOKEN"
+    sendStatus "ERROR: no such file $TOKEN"
     exit 1
 fi
 
@@ -41,10 +44,11 @@ java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ quiet-down
 apt-get update
 echo "INFO: shutdown and upgrade"
 systemctl stop jenkins
-apt-get install jenkins docker-ce
+systemctl stop docker
+apt-get install jenkins docker-ce -y
 unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
+systemctl start docker
 systemctl start jenkins
-
 
 RES=""
 for i in `seq 1 10`; do
@@ -56,6 +60,10 @@ for i in `seq 1 10`; do
       break
   fi
 done
+
+if (curl -s http://127.0.0.1:8080/ 2>&1|grep Exception);then
+      SUCCESS_JENKINS="false"
+fi
 
 SUCCESS_DOCKER="false"
 if (docker run hello-world|grep -q "Hello from Docker");then
