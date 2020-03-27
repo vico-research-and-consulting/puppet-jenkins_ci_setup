@@ -40,7 +40,7 @@ echo "INFO: blocking jenkins"
 java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
 apt-get update
 echo "INFO: shutdown and upgrade"
-systemctl stop jenkins
+systemctl stop jenkins docker
 apt-get install jenkins docker-ce
 unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
 systemctl start jenkins
