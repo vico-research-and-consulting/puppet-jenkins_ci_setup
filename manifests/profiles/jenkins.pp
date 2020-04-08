@@ -16,7 +16,6 @@ class jenkins_ci_setup::profiles::jenkins (
     if $default_plugins {
       $default_plugins_hash = {
         'basic-branch-build-strategies'      => {},
-        'violations'                         => {},
         'ws-ws-replacement'                  => {},
         'command-launcher'                   => {},
         'ansicolor'                          => {},
