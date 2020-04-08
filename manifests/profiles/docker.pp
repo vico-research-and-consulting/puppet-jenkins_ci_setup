@@ -1,6 +1,7 @@
 class jenkins_ci_setup::profiles::docker (
   String $user = $jenkins_ci_setup::profiles::jenkins::user,
   Optional[String] $docker_config = undef, 
+  Boolean $disable_swap = false,
 ) {
 
   class { 'docker':
@@ -48,5 +49,20 @@ class jenkins_ci_setup::profiles::docker (
     }
   }
 
+  if $disable_swap {
+    file_line { 'remove-swap-fstab-swap':
+      ensure => absent,
+      path   => '/etc/fstab',
+      match   => '^/.*swap.*\s+.*\s+swap\s+.*',
+      match_for_absence => true
+    }
+    -> exec { 'disable_swap':
+      command   => 'swapoff -a'
+      logoutput => 'on_failure',
+      try_sleep => 1,
+      onlyif    => 'swapon  -s|grep -q -P "^/"' ,
+      path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin',
+    }
+  }
 }
 
