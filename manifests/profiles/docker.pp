@@ -57,7 +57,7 @@ class jenkins_ci_setup::profiles::docker (
       match_for_absence => true
     }
     -> exec { 'disable_swap':
-      command   => 'swapoff -a'
+      command   => 'swapoff -a',
       logoutput => 'on_failure',
       try_sleep => 1,
       onlyif    => 'swapon  -s|grep -q -P "^/"' ,
