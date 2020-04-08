@@ -61,7 +61,7 @@ class jenkins_ci_setup::profiles::docker (
       logoutput => 'on_failure',
       try_sleep => 1,
       onlyif    => 'swapon  -s|grep -q -P "^/"' ,
-      path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin',
+      path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     }
   }
 }
