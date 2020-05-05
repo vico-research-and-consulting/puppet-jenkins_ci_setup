@@ -132,7 +132,8 @@ class jenkins_ci_setup::profiles::jenkins (
     file_line { "Set CSP header":
       path    => '/etc/default/jenkins',
       line    =>
-        'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src \'self\'; style-src \'self\' \'unsafe-inline\'\""',
+        'export JAVA_ARGS="$JAVA_ARGS -Dhudson.model.DirectoryBrowserSupport.CSP=\"sandbox allow-scripts; default-src *; style-src * http://* \'unsafe-inline\' \'unsafe-eval\'; script-src \'self\' http://* \'unsafe-inline\' \'unsafe-eval\'\""'
+      ,
       match   => '.*hudson.model.DirectoryBrowserSupport.CSP.*',
       require => Package['jenkins'],
       notify  => Service['jenkins'],
@@ -161,10 +162,10 @@ class jenkins_ci_setup::profiles::jenkins (
     }
 
     file { "/etc/jenkins":
-      ensure  => directory,
-      mode    => '0700',
-      owner   => 'root',
-      group   => 'root',
+      ensure => directory,
+      mode   => '0700',
+      owner  => 'root',
+      group  => 'root',
     }
 
     file { "/usr/local/sbin/jenkins-unattended-upgrades":
