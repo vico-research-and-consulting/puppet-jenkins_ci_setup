@@ -23,7 +23,7 @@ if (! [ -f "$TOKEN" ] );then
 fi
 
 if [ -f "/var/lock/suppress-jenkins-upgrade" ];then
-    if (find /var/lock/suppress-jenkins-upgrade -mtime 14 |grep -q "/var/lock/suppress-jenkins-upgrade");then
+    if (find /var/lock/suppress-jenkins-upgrade -mtime +14 |grep -q "/var/lock/suppress-jenkins-upgrade");then
       sendStatus "OK: JENKINS upgraded is suppressed for 14 days now, performing upgrade"
       rm -f /var/lock/suppress-jenkins-upgrade
     else
