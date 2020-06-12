@@ -60,7 +60,7 @@ class jenkins_ci_setup::profiles::haproxy (
     options => {
       # option   => 'httplog',
       reqadd   => [
-        'X-Forwarded-Port:\ %[dst_port]',
+#        'X-Forwarded-Port:\ %[dst_port]',
         'X-Forwarded-Proto:\ https',
       ],
       server   => [
@@ -68,4 +68,6 @@ class jenkins_ci_setup::profiles::haproxy (
       ],
     }
   }
+
+  # https://wiki.jenkins.io/display/JENKINS/Running+Jenkins+behind+HAProxy
 }
