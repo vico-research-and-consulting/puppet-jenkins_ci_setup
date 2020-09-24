@@ -40,6 +40,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'build-timeout'                      => {},
         'credentials-binding'                => {},
         'plain-credentials'                  => {},
+        'snakeyaml-api'                      => {},
         'display-url-api'                    => {},
         'docker-commons'                     => {},
         'docker-java-api'                    => {},
@@ -78,6 +79,22 @@ class jenkins_ci_setup::profiles::jenkins (
         'htmlpublisher'                      => {},
         'rocketchatnotifier'                 => {},
         'configuration-as-code'              => {},
+        'bootstrap4-api'                     => {},
+        'echarts-api'                        => {},
+        'workflow-cps-global-lib'            => {},
+        'pipeline-stage-view'                => {},
+        'lockable-resources'                 => {},
+        'h2-api'                             => {},
+        'jquery3-api'                        => {},
+        'font-awesome-api'                   => {},
+        'popper-api'                         => {},
+        'jquery3-api'                        => {},
+        'plugin-util-api'                    => {},
+        'pipeline-rest-api'                  => {},
+        'handlebars'                         => {},
+        'momentjs'                           => {},
+        'git-server'                         => {},
+
       }
     } else {
       $default_plugins_hash = {}
@@ -109,15 +126,17 @@ class jenkins_ci_setup::profiles::jenkins (
         '/usr/bin/test -n "$(/usr/bin/find /etc/apt/sources.list.d/ /etc/apt/sources.list -newer /var/cache/apt/pkgcache.bin)"'
       ,
     } -> class { '::jenkins':
-      repo              => false,
-      install_java      => false,
-      cli_remoting_free => true,
-      plugin_hash       => deep_merge($plugin_hash, $default_plugins_hash),
+      repo            => false,
+      install_java    => false,
+      user_hash       => $user_hash,
+      #cli_remoting_free => true,
+      plugin_hash     => deep_merge($plugin_hash, $default_plugins_hash),
       #cli               => true,
       #cli_password_file => $admin_password_creds,
       #executors         => 4,
-      #cli_ssh_keyfile   => "${jenkins_user_home}/.ssh/id_rsa",
-      purge_plugins     => $purge_plugins,
+      cli_username    => "admin",
+      cli_ssh_keyfile => "${jenkins_user_home}/.ssh/id_rsa",
+      purge_plugins   => $purge_plugins,
     }
 
     # The jenkins module utilizes file_line, JAVA_ARGS is prefixed by "export" to prevent duplicate matches
