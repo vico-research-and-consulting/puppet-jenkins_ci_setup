@@ -87,12 +87,12 @@ class jenkins_ci_setup::profiles::jenkins (
       ensure => installed,
     }
     -> apt::source { 'jenkins':
-      location => 'http://pkg.jenkins-ci.org/debian-stable',
+      location => 'http://pkg.jenkins.io/debian-stable',
       release  => 'binary/',
       repos    => '',
       key      => {
-        'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
-        'source' => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key'
+        'id'     => '62A9756BFD780C377CF24BA8FCEF32E745F2C3D5',
+        'source' => 'https://pkg.jenkins.io/debian-stable/jenkins.io.key'
       },
       include  => {
         'src' => false,
