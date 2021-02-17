@@ -99,6 +99,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'data-tables-api'                    => {},
         'forensics-api'                      => {},
         'sonar'                              => {},
+        'Office-365-Connector'               => {},
 
       }
     } else {
