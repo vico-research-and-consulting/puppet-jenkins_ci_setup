@@ -94,6 +94,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'handlebars'                         => {},
         'momentjs'                           => {},
         'git-server'                         => {},
+        'warnings-ng'                        => {},
 
       }
     } else {
