@@ -98,6 +98,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'analysis-model-api'                 => {},
         'data-tables-api'                    => {},
         'forensics-api'                      => {},
+        'sonar'                              => {},
 
       }
     } else {
