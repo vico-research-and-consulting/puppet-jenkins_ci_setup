@@ -54,13 +54,13 @@ end
 #----------------------------------------------------------------------
 
 describe command('tail -1000 /var/log/jenkins/jenkins.log') do
-  its(:stdout) { should_not match /Jenkins is fully up and running/ }
+  its(:stdout) { should match /Jenkins is fully up and running/ }
   #its(:stdout) { should_not match /Exception/ }
   #its(:stdout) { should_not match /ERROR/ }
 end
 
-describe command('curl -vvv -k "https://127.0.0.1/" 2>&1') do
-     its(:stdout) { should match /You are authenticated as: anonymous/ }
+describe command('curl -k "https://127.0.0.1/" 2>&1') do
+     its(:stdout) { should match /Authentication required/ }
 end
 
 #----------------------------------------------------------------------

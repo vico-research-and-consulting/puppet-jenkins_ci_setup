@@ -46,12 +46,12 @@ end
 # testing basic function
 #----------------------------------------------------------------------
 
-describe command('curl -vvv -k "http://127.0.0.1/" 2>&1') do
+describe command('curl -vvv -k "http://127.0.0.1/" 2>&1 | grep Location') do
      its(:stdout) { should match /Location: https:\/\// }
 end
 
-describe command('curl -vvv -k "https://127.0.0.1/" 2>&1') do
-     its(:stdout) { should match /You are authenticated as: anonymous/ }
+describe command('curl -k "https://127.0.0.1/" 2>&1') do
+     its(:stdout) { should match /Authentication required/ }
 end
 
 
