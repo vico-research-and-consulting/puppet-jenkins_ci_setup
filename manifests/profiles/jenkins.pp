@@ -88,7 +88,6 @@ class jenkins_ci_setup::profiles::jenkins (
         'jquery3-api'                        => {},
         'font-awesome-api'                   => {},
         'popper-api'                         => {},
-        'jquery3-api'                        => {},
         'plugin-util-api'                    => {},
         'pipeline-rest-api'                  => {},
         'handlebars'                         => {},
