@@ -12,17 +12,21 @@ class jenkins_ci_setup::profiles::python (
     require  => [ Package['python3-pip'], ],
   })
 
-  apt::ppa { 'ppa:deadsnakes/ppa': }
+  package { [ "software-properties-common", ]:
+    # shouldn't apt::ppa require this? needed for add-apt-repository
+    ensure => installed,
+  }
+  -> apt::ppa { 'ppa:deadsnakes/ppa': }
   -> package { [ 'python3.9', ]:
     ensure => installed,
   }
 
   if $pypi_settings_template != "" {
     file { '/var/lib/jenkins/.pypirc':
-      ensure => file,
-      owner  => "jenkins",
-      group  => "jenkins",
-      mode   => "0644",
+      ensure  => file,
+      owner   => "jenkins",
+      group   => "jenkins",
+      mode    => "0640",
       content => template($pypi_settings_template),
       require => File['/var/lib/jenkins/'],
     }
