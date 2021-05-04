@@ -9,10 +9,10 @@ mod 'puppet-jenkins',
    :git => 'git@github.com:voxpupuli/puppet-jenkins.git',
    :ref => 'master'
 
-mod 'puppetlabs-docker', '3.14.0'
-mod 'puppetlabs-haproxy', '4.5.0'
-mod 'puppetlabs-apt', '7.7.1'
-mod 'puppetlabs/stdlib', '6.6.0'
+mod 'puppetlabs-docker', '<4.0.0'
+mod 'puppetlabs-haproxy', '<5.0.0'
+mod 'puppetlabs-apt', '<8.0.0'
+mod 'puppetlabs/stdlib', '<7.0.0'
 
 #mod 'test_repo',
 #  :git => 'git@foobar.de/foobar_foo.git'
