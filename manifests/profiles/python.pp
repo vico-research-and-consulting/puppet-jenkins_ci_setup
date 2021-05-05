@@ -17,7 +17,7 @@ class jenkins_ci_setup::profiles::python (
     ensure => installed,
   }
   -> apt::ppa { 'ppa:deadsnakes/ppa': }
-  -> package { [ 'python3.9', ]:
+  -> package { [ 'python3.9', "python3.9-distutils" ]:
     ensure => installed,
   }
 
