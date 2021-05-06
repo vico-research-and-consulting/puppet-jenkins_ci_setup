@@ -75,7 +75,6 @@ class jenkins_ci_setup::profiles::jenkins (
         'ssh-slaves'                         => {},
         'timestamper'                        => {},
         'token-macro'                        => {},
-        'icon-shim'                          => {},
         'htmlpublisher'                      => {},
         'rocketchatnotifier'                 => {},
         'configuration-as-code'              => {},
