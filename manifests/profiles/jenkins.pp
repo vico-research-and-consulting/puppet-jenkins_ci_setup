@@ -231,8 +231,8 @@ class jenkins_ci_setup::profiles::jenkins (
         owner   => 'root',
         group   => 'root',
         content => "# created by puppet
-${unattended_upgrade_cron} root /usr/local/sbin/jenkins-unattended-upgrades 2>&1| logger -t jenkins-unattended-upgrades
-        ",
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+${unattended_upgrade_cron} root /usr/local/sbin/jenkins-unattended-upgrades 2>&1| logger -t jenkins-unattended-upgrades",
         require => File['/etc/jenkins'],
       }
     } else {
