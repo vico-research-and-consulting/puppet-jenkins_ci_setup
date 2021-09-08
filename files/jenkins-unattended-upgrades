@@ -37,8 +37,16 @@ mkdir -p $INFO_FILE_DIR
 
 cd $INFO_FILE_DIR
 
-if ( ! [ -f "jenkins-cli.jar" ] );then
-    unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
+war=/usr/share/jenkins/jenkins.war
+
+update_cli() {
+    cli=$(unzip -l $war | grep -oi '[^ ]*cli-.*jar')
+    unzip -j -o $war $cli
+    mv $(basename $cli) jenkins-cli.jar
+}
+
+if [ ! -f "jenkins-cli.jar" ];then
+    update_cli
 fi
 
 SUCCESS_JENKINS="false"
@@ -56,7 +64,7 @@ echo "INFO: shutdown and upgrade"
 systemctl stop jenkins
 systemctl stop docker
 apt-get install jenkins docker-ce -y
-unzip -j -o /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar
+update_cli
 systemctl start docker
 systemctl start jenkins
 
