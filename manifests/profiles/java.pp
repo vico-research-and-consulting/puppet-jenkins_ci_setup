@@ -3,7 +3,9 @@ class jenkins_ci_setup::profiles::java (
     Hash $maven_settings_config     = {},
     String $java_package_extra      = "openjdk-11-jdk",
 ) {
-  package{ "maven": }
+  class { "maven::maven":
+    version => "3.8.2",
+  }
 
   jenkins::plugin { 'maven-plugin': }
   jenkins::plugin { 'm2release': }
