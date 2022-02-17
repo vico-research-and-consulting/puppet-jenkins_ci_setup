@@ -3,6 +3,7 @@ class jenkins_ci_setup::profiles::python (
   Hash $pypi_settings_config     = {},
 ) {
   ensure_packages(
+    # TODO make sure this gets updated
     [ "python3-pip", "python3-dev", "virtualenv", "python3", "zlib1g-dev", ]
   )
   # https://gist.github.com/kogcyc/07c3e5d1f427c9fa6b99044d81f8ee82
