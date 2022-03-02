@@ -5,7 +5,7 @@ sendStatus(){
     echo ">>>>$STATUS<<<<"
     logger -t "jenkins-unattended-upgrades" "$STATUS"
     if (which zabbix_sender &>/dev/null);then
-      zabbix_sender -s `hostname` -c /etc/zabbix/zabbix_agentd.conf -k jenkins.jenkins-unattended-upgrades -o "$STATUS" > /dev/null
+      zabbix_sender -s $(hostname) -c /etc/zabbix/zabbix_agentd.conf -k jenkins.jenkins-unattended-upgrades -o "$STATUS" >/dev/null
     fi
 }
 
@@ -69,17 +69,18 @@ systemctl start docker
 systemctl start jenkins
 
 RES=""
-for i in `seq 1 11`; do
+for i in $(seq 1 11); do
   RES="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ version 2>&1)"
-  if [ "$?" = "0" ];then
+  ret="$?"
+  if [ "$ret" = "0" ];then
       SUCCESS_JENKINS="true"
       break
   fi
-  echo "waiting for jenkins to be back after restart"
+  echo "waiting for jenkins to be back after restart (got $ret, $RES)"
   sleep 60
 done
 
-if (curl -s http://127.0.0.1:8080/ 2>&1|grep Exception);then
+if curl -s http://127.0.0.1:8080/ 2>&1 | grep Exception;then
       echo "Jenkins: got exception"
       SUCCESS_JENKINS="false"
 fi
