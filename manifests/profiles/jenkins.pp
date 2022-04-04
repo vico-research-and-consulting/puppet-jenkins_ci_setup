@@ -76,7 +76,6 @@ class jenkins_ci_setup::profiles::jenkins (
         'timestamper'                        => {},
         'token-macro'                        => {},
         'htmlpublisher'                      => {},
-        'rocketchatnotifier'                 => {},
         'configuration-as-code'              => {},
         'bootstrap4-api'                     => {},
         'echarts-api'                        => {},
