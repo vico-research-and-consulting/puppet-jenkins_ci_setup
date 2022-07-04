@@ -79,7 +79,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'configuration-as-code'              => {},
         'bootstrap4-api'                     => {},
         'echarts-api'                        => {},
-        'workflow-cps-global-lib'            => {},
+        'pipeline-groovy-lib'                => {},
         'pipeline-stage-view'                => {},
         'lockable-resources'                 => {},
         'h2-api'                             => {},
