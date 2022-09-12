@@ -41,7 +41,7 @@ class jenkins_ci_setup::profiles::java (
         path      => '/usr/local/sbin:/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin',
         user      => 'root',
         logoutput => true,
-        unless    => 'java -version 2>&1 |grep -P \'^openjdk version "1.17.\d+_\d+"\'',
+        unless    => 'java -version 2>&1 |grep -P \'^openjdk version "17\.\d+\.\d+"\'',
         require   => Package[$java_package_extra],
     }
   }
