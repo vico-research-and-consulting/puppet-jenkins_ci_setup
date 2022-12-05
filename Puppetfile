@@ -10,7 +10,7 @@ mod 'puppet-jenkins',
    :ref => 'ddbe1ccdb94e15947da8629335ccc46b3d5c0fad'
 
 mod 'puppetlabs-docker', '<4.0.0'
-mod 'puppetlabs-haproxy', '<5.0.0'
+mod 'puppetlabs-haproxy', '<7.0.0'
 mod 'puppetlabs-apt', '<8.0.0'
 mod 'puppetlabs/stdlib', '<7.0.0'
 mod 'maestrodev-maven', '1.4.0'
