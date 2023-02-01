@@ -1,12 +1,9 @@
-
-
-
-
 class jenkins_ci_setup::profiles::java (
     String $maven_settings_template = "",
     Hash $maven_settings_config     = {},
     String $java_package_extra      = "openjdk-11-jdk",
     Boolean $maven_purge = false,
+    Numeric $delete_older_than = 92,
 ) {
   class { "maven::maven":
     version => "3.8.2",
@@ -50,7 +47,7 @@ class jenkins_ci_setup::profiles::java (
             group   => 'root',
             content => "# created by puppet
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-00 18 * * 6 root USER=root /usr/local/sbin/jenkins-maven-purge 31 2>&1| logger -t jenkins-maven-purge
+00 18 * * 6 root USER=root /usr/local/sbin/jenkins-maven-purge $delete_older_than 2>&1| logger -t jenkins-maven-purge
 ",
         }
     }
