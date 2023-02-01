@@ -3,7 +3,7 @@ class jenkins_ci_setup::profiles::java (
     Hash $maven_settings_config     = {},
     String $java_package_extra      = "openjdk-11-jdk",
     Boolean $maven_purge            = false,
-    Numeric $delete_older_than      = 92,
+    Numeric $delete_older_than      = 180,
 ) {
   class { "maven::maven":
     version => "3.8.2",
