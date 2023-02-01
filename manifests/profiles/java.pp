@@ -1,7 +1,12 @@
+
+
+
+
 class jenkins_ci_setup::profiles::java (
     String $maven_settings_template = "",
     Hash $maven_settings_config     = {},
     String $java_package_extra      = "openjdk-11-jdk",
+    Boolean $maven_purge = false,
 ) {
   class { "maven::maven":
     version => "3.8.2",
@@ -30,6 +35,25 @@ class jenkins_ci_setup::profiles::java (
       require => File['/var/lib/jenkins/.m2/'],
     }
   }
+    if $maven_purge {
+        file { '/usr/local/sbin/jenkins-maven-purge':
+            ensure  => file,
+            owner   => "jenkins",
+            group   => "jenkins",
+            mode    => "750",
+            source => "puppet:///modules/vicoresources/jenkins/jenkins-maven-purge",
+        }
+        file { "/etc/cron.d/jenkins-maven-purge":
+            ensure  => file,
+            mode    => '0755',
+            owner   => 'root',
+            group   => 'root',
+            content => "# created by puppet
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+00 18 * * 6 root USER=root /usr/local/sbin/jenkins-maven-purge 31 2>&1| logger -t jenkins-maven-purge
+",
+        }
+    }
 
   if $java_package_extra {
     package{$java_package_extra:
