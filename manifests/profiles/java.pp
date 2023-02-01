@@ -47,7 +47,7 @@ class jenkins_ci_setup::profiles::java (
             group   => 'root',
             content => "# created by puppet
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-00 18 * * 6 root USER=root /usr/local/sbin/jenkins-maven-purge $delete_older_than 2>&1| logger -t jenkins-maven-purge
+00 03 * * 6 root USER=root /usr/local/sbin/jenkins-maven-purge $delete_older_than 2>&1| logger -t jenkins-maven-purge
 ",
         }
     }
