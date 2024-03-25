@@ -97,7 +97,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'forensics-api'                      => {},
         'sonar'                              => {},
         'Office-365-Connector'               => {},
-
+        'uno-choice'                         => {},
       }
     } else {
       $default_plugins_hash = {}
