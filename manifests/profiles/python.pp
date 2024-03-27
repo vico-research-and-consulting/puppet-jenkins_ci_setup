@@ -4,7 +4,7 @@ class jenkins_ci_setup::profiles::python (
 ) {
   ensure_packages(
     # TODO make sure this gets updated
-    [ "python3-pip", "python3-dev", "virtualenv", "python3", "zlib1g-dev", ]
+    [ "python3-pip", "python3-dev", "python3", "zlib1g-dev", ]
   )
   # https://gist.github.com/kogcyc/07c3e5d1f427c9fa6b99044d81f8ee82
   ensure_packages(['docker-compose', 'pipenv', "black", "isort", "twine" ], {
