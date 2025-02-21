@@ -197,6 +197,13 @@ class jenkins_ci_setup::profiles::jenkins (
       group  => 'root',
     }
 
+    file { "/var/lib/jenkins/tmp":
+      ensure => directory,
+      mode   => '1777',
+      owner  => 'root',
+      group  => 'root',
+    }
+
     file { "/usr/local/sbin/jenkins-unattended-upgrades":
       ensure  => file,
       mode    => '0700',
