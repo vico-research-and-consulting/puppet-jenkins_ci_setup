@@ -97,7 +97,7 @@ class jenkins_ci_setup::profiles::jenkins (
         'forensics-api'                      => {},
         'sonar'                              => {},
         'Office-365-Connector'               => {},
-
+        'uno-choice'                         => {},
       }
     } else {
       $default_plugins_hash = {}
@@ -184,9 +184,22 @@ class jenkins_ci_setup::profiles::jenkins (
       path    => ['/usr/bin', ],
     }
 
+    exec { 'jenkins dev group membership':
+      unless  => '/bin/grep -q "dev\\S*jenkins" /etc/group',
+      command => '/usr/sbin/usermod -aG dev jenkins',
+      require => User['jenkins'],
+    }
+
     file { "/etc/jenkins":
       ensure => directory,
       mode   => '0700',
+      owner  => 'root',
+      group  => 'root',
+    }
+
+    file { "/var/lib/jenkins/tmp":
+      ensure => directory,
+      mode   => '1777',
       owner  => 'root',
       group  => 'root',
     }

@@ -1,34 +1,32 @@
 #!/bin/bash
 
-sendStatus(){
+sendStatus() {
     local STATUS="$1"
     echo ">>>>$STATUS<<<<"
     logger -t "jenkins-unattended-upgrades" "$STATUS"
-    if (which zabbix_sender &>/dev/null);then
-      zabbix_sender -s $(hostname) -c /etc/zabbix/zabbix_agentd.conf -k jenkins.jenkins-unattended-upgrades -o "$STATUS" >/dev/null
+    if (which zabbix_sender &>/dev/null); then
+        zabbix_sender -s $(hostname) -c /etc/zabbix/zabbix_agentd.conf -k jenkins.jenkins-unattended-upgrades -o "$STATUS" >/dev/null
     fi
 }
-
 
 # prepare info file
 INFO_FILE_DIR="/usr/share/jenkins"
 TOKEN="/etc/jenkins/admin-password"
 
-
 sendStatus "OK: STARTING"
 
-if (! [ -f "$TOKEN" ] );then
+if (! [ -f "$TOKEN" ]); then
     sendStatus "ERROR: no such file $TOKEN"
     exit 1
 fi
 
-if [ -f "/var/lock/suppress-jenkins-upgrade" ];then
-    if (find /var/lock/suppress-jenkins-upgrade -mtime +14 |grep -q "/var/lock/suppress-jenkins-upgrade");then
-      sendStatus "OK: JENKINS upgraded is suppressed for 14 days now, performing upgrade"
-      rm -f /var/lock/suppress-jenkins-upgrade
+if [ -f "/var/lock/suppress-jenkins-upgrade" ]; then
+    if (find /var/lock/suppress-jenkins-upgrade -mtime +14 | grep -q "/var/lock/suppress-jenkins-upgrade"); then
+        sendStatus "OK: JENKINS upgraded is suppressed for 14 days now, performing upgrade"
+        rm -f /var/lock/suppress-jenkins-upgrade
     else
-      sendStatus "WARN: JENKINS upgraded is suppressed, stopping here for 14 days"
-      exit 0
+        sendStatus "WARN: JENKINS upgraded is suppressed, stopping here for 14 days"
+        exit 0
     fi
 fi
 
@@ -45,7 +43,7 @@ update_cli() {
     mv $(basename $cli) jenkins-cli.jar
 }
 
-if [ ! -f "jenkins-cli.jar" ];then
+if [ ! -f "jenkins-cli.jar" ]; then
     update_cli
 fi
 
@@ -55,7 +53,7 @@ PLUGIN_LIST="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8
 echo "INFO: invoking plugin upgrades"
 echo
 echo "$PLUGIN_LIST"
-java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ install-plugin $(echo "$PLUGIN_LIST"|awk '{print $1}'|xargs)
+java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ install-plugin $(echo "$PLUGIN_LIST" | awk '{print $1}' | xargs)
 
 echo "INFO: blocking jenkins"
 java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ quiet-down -block -timeout 3600000
@@ -70,31 +68,31 @@ systemctl start jenkins
 
 RES=""
 for i in $(seq 1 11); do
-  RES="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ version 2>&1)"
-  ret="$?"
-  if [ "$ret" = "0" ];then
-      SUCCESS_JENKINS="true"
-      break
-  fi
-  echo "waiting for jenkins to be back after restart (got $ret, $RES)"
-  sleep 60
+    RES="$(java -jar jenkins-cli.jar -auth "@${TOKEN}" -s http://127.0.0.1:8080/ version 2>&1)"
+    ret="$?"
+    if [ "$ret" = "0" ]; then
+        SUCCESS_JENKINS="true"
+        break
+    fi
+    echo "waiting for jenkins to be back after restart (got $ret, $RES)"
+    sleep 60
 done
 
-if curl -s http://127.0.0.1:8080/ 2>&1 | grep Exception;then
-      echo "Jenkins: got exception"
-      SUCCESS_JENKINS="false"
+if curl -s http://127.0.0.1:8080/ 2>&1 | grep Exception; then
+    echo "Jenkins: got exception"
+    SUCCESS_JENKINS="false"
 fi
 
 SUCCESS_DOCKER="false"
-if (docker run hello-world|grep -q "Hello from Docker");then
-  SUCCESS_DOCKER="true"
+if (docker run hello-world | grep -q "Hello from Docker"); then
+    SUCCESS_DOCKER="true"
 fi
 echo "Docker success status: $SUCCESS_DOCKER, Jenkins success status: $SUCCESS_JENKINS"
 
-if [ "$SUCCESS_JENKINS" = "true" ] && [ "$SUCCESS_DOCKER" = "true" ] ;then
-   sendStatus "OK: UPGRADE $RES WAS SUCCESSFUL"
-   exit 0
+if [ "$SUCCESS_JENKINS" = "true" ] && [ "$SUCCESS_DOCKER" = "true" ]; then
+    sendStatus "OK: UPGRADE $RES WAS SUCCESSFUL"
+    exit 0
 else
-   sendStatus "ERROR: UPGRADE WAS NOT SUCCESSFUL"
-   exit 1
+    sendStatus "ERROR: UPGRADE WAS NOT SUCCESSFUL"
+    exit 1
 fi
