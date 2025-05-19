@@ -8,6 +8,7 @@ forge "https://forgeapi.puppetlabs.com"
 mod 'puppet-jenkins', 
    :git => 'git@github.com:voxpupuli/puppet-jenkins.git',
 #   :ref => 'ddbe1ccdb94e15947da8629335ccc46b3d5c0fad'
+   :ref => 'master'
 
 mod 'puppetlabs-docker', '<4.0.0'
 mod 'puppetlabs-haproxy', '<7.0.0'
