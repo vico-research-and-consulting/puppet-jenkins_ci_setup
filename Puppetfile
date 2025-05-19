@@ -11,8 +11,8 @@ mod 'puppet-jenkins',
 
 mod 'puppetlabs-docker', '<4.0.0'
 mod 'puppetlabs-haproxy', '<7.0.0'
-mod 'puppetlabs-apt', '<8.0.0'
-mod 'puppetlabs/stdlib', '<7.0.0'
+mod 'puppetlabs-apt'
+mod 'puppetlabs/stdlib'
 mod 'maestrodev-maven', '1.4.0'
 
 #mod 'test_repo',
